@@ -1,62 +1,62 @@
-If you are using a custom dataset, please provide your dataset definition in the following format in `dataset_info.json`.
+如果您使用自定义数据集，请务必在 `dataset_info.json` 文件中按照以下格式提供数据集定义。
 
 ```json
-"dataset_name": {
-  "hf_hub_url": "the name of the dataset repository on the Hugging Face hub. (if specified, ignore script_url and file_name)",
-  "ms_hub_url": "the name of the dataset repository on the ModelScope hub. (if specified, ignore script_url and file_name)",
-  "script_url": "the name of the directory containing a dataset loading script. (if specified, ignore file_name)",
-  "file_name": "the name of the dataset file in this directory. (required if above are not specified)",
-  "file_sha1": "the SHA-1 hash value of the dataset file. (optional, does not affect training)",
-  "subset": "the name of the subset. (optional, default: None)",
-  "folder": "the name of the folder of the dataset repository on the Hugging Face hub. (optional, default: None)",
-  "ranking": "whether the dataset is a preference dataset or not. (default: false)",
-  "formatting": "the format of the dataset. (optional, default: alpaca, can be chosen from {alpaca, sharegpt})",
-  "columns (optional)": {
-    "prompt": "the column name in the dataset containing the prompts. (default: instruction)",
-    "query": "the column name in the dataset containing the queries. (default: input)",
-    "response": "the column name in the dataset containing the responses. (default: output)",
-    "history": "the column name in the dataset containing the histories. (default: None)",
-    "messages": "the column name in the dataset containing the messages. (default: conversations)",
-    "system": "the column name in the dataset containing the system prompts. (default: None)",
-    "tools": "the column name in the dataset containing the tool description. (default: None)"
+"数据集名称": {
+  "hf_hub_url": "Hugging Face 的数据集仓库地址（若指定，则忽略 script_url 和 file_name）",
+  "ms_hub_url": "ModelScope 的数据集仓库地址（若指定，则忽略 script_url 和 file_name）",
+  "script_url": "包含数据加载脚本的本地文件夹名称（若指定，则忽略 file_name）",
+  "file_name": "该目录下数据集文件的名称（若上述参数未指定，则此项必需）",
+  "file_sha1": "数据集文件的 SHA-1 哈希值（可选，留空不影响训练）",
+  "subset": "数据集子集的名称（可选，默认：None）",
+  "folder": "Hugging Face 仓库的文件夹名称（可选，默认：None）",
+  "ranking": "是否为偏好数据集（可选，默认：False）",
+  "formatting": "数据集格式（可选，默认：alpaca，可以为 alpaca 或 sharegpt）",
+  "columns（可选）": {
+    "prompt": "数据集代表提示词的表头名称（默认：instruction）",
+    "query": "数据集代表请求的表头名称（默认：input）",
+    "response": "数据集代表回答的表头名称（默认：output）",
+    "history": "数据集代表历史对话的表头名称（默认：None）",
+    "messages": "数据集代表消息列表的表头名称（默认：conversations）",
+    "system": "数据集代表系统提示的表头名称（默认：None）",
+    "tools": "数据集代表工具描述的表头名称（默认：None）"
   },
-  "tags (optional, used for the sharegpt format)": {
-    "role_tag": "the key in the message represents the identity. (default: from)",
-    "content_tag": "the key in the message represents the content. (default: value)",
-    "user_tag": "the value of the role_tag represents the user. (default: human)",
-    "assistant_tag": "the value of the role_tag represents the assistant. (default: gpt)",
-    "observation_tag": "the value of the role_tag represents the tool results. (default: observation)",
-    "function_tag": "the value of the role_tag represents the function call. (default: function_call)",
-    "system_tag": "the value of the role_tag represents the system prompt. (default: system, can override system column)"
+  "tags（可选，用于 sharegpt 格式）": {
+    "role_tag": "消息中代表发送者身份的键名（默认：from）",
+    "content_tag": "消息中代表文本内容的键名（默认：value）",
+    "user_tag": "消息中代表用户的 role_tag（默认：human）",
+    "assistant_tag": "消息中代表助手的 role_tag（默认：gpt）",
+    "observation_tag": "消息中代表工具返回结果的 role_tag（默认：observation）",
+    "function_tag": "消息中代表工具调用的 role_tag（默认：function_call）",
+    "system_tag": "消息中代表系统提示的 role_tag（默认：system，会覆盖 system 列）"
   }
 }
 ```
 
-Given above, you can use the custom dataset via specifying `--dataset dataset_name`.
+添加后可通过指定 `--dataset 数据集名称` 参数使用自定义数据集。
 
 ----
 
-Currently we support dataset in **alpaca** or **sharegpt** format, the dataset in alpaca format should follow the below format:
+该项目目前支持两种格式的数据集：**alpaca** 和 **sharegpt**，其中 alpaca 格式的数据集按照以下方式组织：
 
 ```json
 [
   {
-    "instruction": "user instruction (required)",
-    "input": "user input (optional)",
-    "output": "model response (required)",
-    "system": "system prompt (optional)",
+    "instruction": "用户指令（必填）",
+    "input": "用户输入（选填）",
+    "output": "模型回答（必填）",
+    "system": "系统提示词（选填）",
     "history": [
-      ["user instruction in the first round (optional)", "model response in the first round (optional)"],
-      ["user instruction in the second round (optional)", "model response in the second round (optional)"]
+      ["第一轮指令（选填）", "第一轮回答（选填）"],
+      ["第二轮指令（选填）", "第二轮回答（选填）"]
     ]
   }
 ]
 ```
 
-Regarding the above dataset, the `columns` in `dataset_info.json` should be:
+对于上述格式的数据，`dataset_info.json` 中的 `columns` 应为：
 
 ```json
-"dataset_name": {
+"数据集名称": {
   "columns": {
     "prompt": "instruction",
     "query": "input",
@@ -67,30 +67,30 @@ Regarding the above dataset, the `columns` in `dataset_info.json` should be:
 }
 ```
 
-The `query` column will be concatenated with the `prompt` column and used as the user prompt, then the user prompt would be `prompt\nquery`. The `response` column represents the model response.
+其中 `query` 列对应的内容会与 `prompt` 列对应的内容拼接后作为用户指令，即用户指令为 `prompt\nquery`。`response` 列对应的内容为模型回答。
 
-The `system` column will be used as the system prompt. The `history` column is a list consisting string tuples representing prompt-response pairs in the history. Note that the responses in the history **will also be used for training**.
+`system` 列对应的内容将被作为系统提示词。`history` 列是由多个字符串二元组构成的列表，分别代表历史消息中每轮的指令和回答。注意历史消息中的回答**也会被用于训练**。
 
-For the pre-training datasets, only the `prompt` column will be used for training.
+对于预训练数据集，仅 `prompt` 列中的内容会用于模型训练。
 
-For the preference datasets, the `response` column should be a string list whose length is 2, with the preferred answers appearing first, for example:
+对于偏好数据集，`response` 列应当是一个长度为 2 的字符串列表，排在前面的代表更优的回答，例如：
 
 ```json
 {
-  "instruction": "user instruction",
-  "input": "user input",
+  "instruction": "用户指令",
+  "input": "用户输入",
   "output": [
-    "chosen answer",
-    "rejected answer"
+    "优质回答",
+    "劣质回答"
   ]
 }
 ```
 
-Remember to set `"ranking": true` for the preference datasets.
+添加偏好数据集需要额外指定 `"ranking": true`。
 
 ----
 
-The dataset in sharegpt format should follow the below format:
+而 sharegpt 格式的数据集按照以下方式组织：
 
 ```json
 [
@@ -98,23 +98,23 @@ The dataset in sharegpt format should follow the below format:
     "conversations": [
       {
         "from": "human",
-        "value": "user instruction"
+        "value": "用户指令"
       },
       {
         "from": "gpt",
-        "value": "model response"
+        "value": "模型回答"
       }
     ],
-    "system": "system prompt (optional)",
-    "tools": "tool description (optional)"
+    "system": "系统提示词（选填）",
+    "tools": "工具描述（选填）"
   }
 ]
 ```
 
-Regarding the above dataset, the `columns` in `dataset_info.json` should be:
+对于上述格式的数据，`dataset_info.json` 中的 `columns` 应为：
 
 ```json
-"dataset_name": {
+"数据集名称": {
   "columns": {
     "messages": "conversations",
     "system": "system",
@@ -129,6 +129,6 @@ Regarding the above dataset, the `columns` in `dataset_info.json` should be:
 }
 ```
 
-where the `messages` column should be a list following the `u/a/u/a/u/a` order.
+其中 `messages` 列应当是一个列表，且符合 `用户/模型/用户/模型/用户/模型` 的顺序。
 
-Pre-training datasets and preference datasets are incompatible with the sharegpt format yet.
+预训练数据集和偏好数据集尚不支持 sharegpt 格式。
