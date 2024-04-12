@@ -298,7 +298,7 @@ huggingface-cli login
 ### 安装依赖
 
 ```bash
-git clone https://github.com/hiyouga/LLaMA-Factory.git
+git clone https://github.com/kaliCYH/LLaMA-Factory.git
 conda create -n llama_factory python=3.10
 conda activate llama_factory
 cd LLaMA-Factory
