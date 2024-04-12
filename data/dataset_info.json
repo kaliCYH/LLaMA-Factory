@@ -23,6 +23,10 @@
     "file_name": "scenicinfo.json",
     "file_sha1": ""
   },
+  "scenicinfo": {
+    "file_name": "scenicinfo_clean.json",
+    "file_sha1": ""
+  },
   "oaast_sft": {
     "file_name": "oaast_sft.json",
     "file_sha1": "7baf5d43e67a91f9bbdf4e400dbe033b87e9757e",
